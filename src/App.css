@@ -1,0 +1,114 @@
+/* .app {
+  padding: 30px;
+  display: flex;
+  width: 1000px; 
+  height: 100vh;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+
+.todoList{
+  display: block;
+  margin-right: 30px;
+  font-size: 60;
+  background: #ffffff;
+  padding: 18px 14px;
+  height: fit-content;
+  border-radius: 5%;
+  opacity: 90%;
+  color: rgb(0, 0, 0);
+  margin-right: 30px;
+}
+
+
+.checkbox.style-c {
+  display: inline-block;
+  position: relative;
+  padding-left: 30px;
+  padding-right: 10px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+}
+
+.checkbox.style-c input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox.style-c input:checked~.checkbox__checkmark {
+  background-color: #f9bad9;
+}
+
+.checkbox.style-c input:checked~.checkbox__checkmark:after {
+  opacity: 1;
+}
+
+.checkbox.style-c:hover input~.checkbox__checkmark {
+  background-color: #eee;
+}
+
+.checkbox.style-c:hover input:checked~.checkbox__checkmark {
+  background-color: #f88dc3;
+}
+
+.checkbox.style-c .checkbox__checkmark {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #eee;
+  transition: background-color 0.25s ease;
+  border-radius: 4px;
+}
+
+.checkbox.style-c .checkbox__checkmark:after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 4px;
+  width: 5px;
+  height: 10px;
+  border: solid #131313;
+  border-width: 0 2px 3px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.checkbox.style-c .checkbox__body {
+  color: #000000;
+  line-height: 1.4;
+  font-size: 18px;
+}
+
+
+.todoList:hover{
+  box-shadow: 0px 0px 1px 4px #f9bad9 inset;
+}
+
+.error-message {
+  color: red
+}
+
+.error{
+  border: red 2px solid
+}
+
+.active-filter {
+  background-color: #f9bad9
+}
+
+.is-done {  
+  opacity: 0.7;
+}
+
+
+ 

@@ -1,0 +1,88 @@
+  
+  
+  Todo:
+  return (
+    <div>
+      <h1>{props.title}</h1>
+      <div>
+        <input type="text" />
+        <button>+</button>
+      </div>
+      
+      <ul>
+        {props.tasks.map((task) => (
+          <li>
+            <input type="checkbox" checked={task.isDone} />
+            <span>{task.title}</span>
+            <button
+              onClick={() => {
+                props.removeTask(task.id);
+              }}
+            >
+              X
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <div>
+        <button onClick={() => {props.changeFilter("all")}}>
+          All
+        </button>
+        <button onClick={() => {props.changeFilter("active")}}>
+          Active
+        </button>
+        <button onClick={() => {props.changeFilter("completed")}}>
+          Completed
+        </button>
+      </div>
+    </div>
+  );
+
+
+
+
+  app:
+   let [tasks, setTasks] = useState<Array<TaskType>>([
+    { id: 1, title: "CSS", isDone: true },
+    { id: 2, title: "JS", isDone: true },
+    { id: 3, title: "React", isDone: false },
+    { id: 4, title: "Redux", isDone: false },
+  ]);
+  let [filter, setFilter] = useState<FilterValuesType>("all");
+
+  // удалем задачи = фильтруем массив через ид, который получили с помщью мэп
+  // теперь в стайте хранится отфильрованный массив
+  function removeTask(id: number) {
+    let filteredTasks = tasks.filter((task) => task.id !== id);
+    setTasks(filteredTasks);
+  }
+
+  // в setFilter пеоедаем строку равную названию кнопки и изменяем значение filter
+  function changeFilter(value: FilterValuesType) {
+    setFilter(value);
+  }
+
+  //присваиваем изначальный(но без удаленных) массив в новый
+  // затем он отфильтруется или войдет весь
+   let tasksForTodo = tasks;
+  //если филтер = completed т.е нажата такая кнопка, то отобразятся задачи с галочкой 
+  if (filter === "completed") {
+    tasksForTodo = tasks.filter((task) => task.isDone);
+  }
+  //если филтер = active т.е нажата такая кнопка, то отобразятся задачи без галочки
+  if (filter === "active") {
+    tasksForTodo = tasks.filter((task) => !task.isDone);
+  }
+
+  return (
+    <>
+      <TodoList
+        title={"Learn"}
+        // только таски которые прошли фильтрацию или all
+        tasks={tasksForTodo}
+        removeTask={removeTask}
+        changeFilter={changeFilter}
+      />
+    </>
+  );
