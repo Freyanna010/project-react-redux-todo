@@ -10,13 +10,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 // чтобы не перепутать названия
 export type FilterValuesType = "all" | "completed" | "active";
 // тип данных тутду
-type TodoListType = {
+ export type TodoListType = {
   id: string
   title: string
   filter: FilterValuesType
 }
 
-type tasksObjType = {
+ export type tasksObjType = {
   [key: string]: Array<TasksType>
 }
 
@@ -30,7 +30,9 @@ function App() {
   ]);
   let [tasksObj, setTasksObj] = useState<tasksObjType>({
     [todoListId1]: [
-    
+      { id: v1(), title: "Learn JS", isDone: false },
+      { id: v1(), title: "Learn React", isDone: true },
+      { id: v1(), title: "Learn ", isDone: true },
     ],
     [todoListId2]: [
       { id: v1(), title: "Book", isDone: false },
@@ -67,7 +69,7 @@ function App() {
   function addTodoList(title: string) {
     let todoList: TodoListType = { id: v1(), title: title, filter: "all" };
     setTodoList([todoList, ...todoLists]);
-    setTasksObj({ ...tasksObj, [todoList.id]: [] });
+    setTasksObj({ ...tasksObj, [todoList.id]: [...todoList] });
   }
   function changeStatus(taskId: string, isDone: boolean, todoListId: string) {
     let tasks = tasksObj[todoListId];

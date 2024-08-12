@@ -10,7 +10,7 @@ import { pink, grey } from "@mui/material/colors";
 
 // типизация для каждого объeкта тасок
 export type TasksType = {
-  id: string;
+  "id": string;
   title: string;
   isDone: boolean;
 };
@@ -59,7 +59,7 @@ function TodoList(props: PropsType) {
     <div       >
       <h2>
         <EditableSpan title={props.title} onChange={onChangeTodoTitleHandler} />
-      
+
         <IconButton
           aria-label="delete"
           onClick={removeTodoList}
