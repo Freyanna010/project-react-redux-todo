@@ -54,7 +54,6 @@ function App() {
     setTasksObj({ ...tasksObj });
   }
   function addTask(title: string, todoListId: string) {
-    debugger
     // получить массив тасок по айди
     let tasks = tasksObj[todoListId];
     // сформировать новую таску c полученным тайтлом
@@ -67,9 +66,11 @@ function App() {
     setTasksObj({ ...tasksObj });
   }
   function addTodoList(title: string) {
+    // новый объект с измененным значение тайтл
     let todoList: TodoListType = { id: v1(), title: title, filter: "all" };
+    
     setTodoList([todoList, ...todoLists]);
-    setTasksObj({ ...tasksObj, [todoList.id]: [...todoList] });
+    setTasksObj({ ...tasksObj, [todoList.id]: [{ ...todoList }] });
   }
   function changeStatus(taskId: string, isDone: boolean, todoListId: string) {
     let tasks = tasksObj[todoListId];
