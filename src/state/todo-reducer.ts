@@ -69,6 +69,7 @@ export const removeTodoListAC = (todolistId: string): RemoveTodoListAction => {
   return { type: "REMOVE-TODOLIST", id: todolistId };
 };
 export const addTodoListAC = (title: string): AddTodoListAction => {
+  // генирируем  новый айди здесь
   return { type: "ADD-TODOLIST", title, tolistId: v1() };
 };
 export const changeTodoListTitleAC = (
