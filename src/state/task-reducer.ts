@@ -1,5 +1,5 @@
 import { tasksObjType } from "../App";
-import { AddTodoListAction, RemoveTodoListAction } from "./todo-reducer";
+import { AddTodoListAction, RemoveTodoListAction, todoListId1, todoListId2 } from "./todo-reducer";
 
 import { v1 } from "uuid";
 
@@ -36,10 +36,24 @@ type Actions =
   | AddTodoListAction
   | RemoveTodoListAction;
 
+
+const initialState: tasksObjType = {
+  [todoListId1]: [
+    { id: v1(), title: "Learn JS", isDone: false },
+    { id: v1(), title: "Learn React", isDone: true },
+    { id: v1(), title: "Learn ", isDone: true },
+  ],
+  [todoListId2]: [
+    { id: v1(), title: "Book", isDone: false },
+    { id: v1(), title: "Cheir", isDone: true },
+  ],
+};
+
 // reducer принимает стает с типом обьекта тасок
 //         принимает акшен с типом всех видов тасок
 export const tasksReducer = (
-  state: tasksObjType,
+  // если придет  андефайнед(при первом диспаче) то присвоим стайту инишиал стайт
+  state: tasksObjType = initialState,
   action: Actions
 ): tasksObjType => {
   // следим за тем, какой тип получили из объекта экшен
@@ -75,7 +89,7 @@ export const tasksReducer = (
         ...state,
       };
       const tasks = stateCopy[action.todolistId];
-      
+
       // получаем таску по айди
       let task = tasks.find((t) => t.id === action.taskId);
       // если такая есть - меняем ее статус
@@ -112,7 +126,7 @@ export const tasksReducer = (
       return copyState;
     }
     default:
-      throw new Error("???");
+      return state;
   }
 };
 

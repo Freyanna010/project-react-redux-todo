@@ -1,22 +1,32 @@
-import { useReducer, useRef, useState } from "react";
+import { useReducer } from "react";
 import "./App.css";
 import TodoList, { TasksType } from "./TodoList";
 import { v1 } from "uuid";
-import AddItemForm from "./AddInputForm";
+import {
+  addTodoListAC,
+  changeTodoListFilterAC,
+  changeTodoListTitleAC,
+  removeTodoListAC,
+  todoReducer,
+} from "./state/todo-reducer";
+import {
+  addTaskAC,
+  changeTaskStatusAC,
+  changeTaskTitleAC,
+  removeTaskAC,
+  tasksReducer,
+} from "./state/task-reducer";
 import {
   AppBar,
   Button,
-  IconButton,
-  ThemeProvider,
-  Toolbar,
-  Typography,
   Container,
   Grid,
+  IconButton,
   Paper,
+  Toolbar,
+  Typography,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import { todoReducer } from "./state/todo-reducer";
-import { addTaskAC, removeTaskAC, tasksReducer } from "./state/task-reducer";
+import AddItemForm from "./AddInputForm";
 
 // чтобы не перепутать названия
 export type FilterValuesType = "all" | "completed" | "active";
@@ -54,57 +64,41 @@ function AppWithReducer() {
   });
 
   function removeTodoList(todoListId: string) {
-    const action = removeTodoList(todoListId);
-    dispatchTodoReducer(action)
+    const action = removeTodoListAC(todoListId);
+    dispatchTodoReducer(action);
+    dispatchTasksReducer(action);
   }
   function removeTask(id: string, todoListId: string) {
     // получим экшен из функции криертора
     const action = removeTaskAC(id, todoListId);
     // задиспачим полученный экшен
-    dispatchTasksReducer(action)
+    dispatchTasksReducer(action);
   }
   function addTask(title: string, todoListId: string) {
-   const action = addTaskAC(title, todoListId);
-   dispatchTasksReducer(action)
+    const action = addTaskAC(title, todoListId);
+    dispatchTasksReducer(action);
   }
   function addTodoList(title: string) {
-    // новый объект с измененным значение тайтл
-    let todoList: TodoListType = { id: v1(), title: title, filter: "all" };
-    setTodoList([todoList, ...todoLists]);
-    setTasksObj({ ...tasksObj, [todoList.id]: [{ todoList }] });
+    const action = addTodoListAC(title);
+    dispatchTodoReducer(action);
+    dispatchTasksReducer(action);
   }
   function changeStatus(taskId: string, isDone: boolean, todoListId: string) {
-    let tasks = tasksObj[todoListId];
-    let task = tasks.find((t) => t.id === taskId);
-    if (task) {
-      task.isDone = isDone;
-      setTasksObj({ ...tasksObj });
-    }
+    const action = changeTaskStatusAC(taskId, todoListId, isDone);
+    dispatchTasksReducer(action);
   }
   function changeFilter(value: FilterValuesType, todoListId: string) {
-    // ищем - есть ли туду лист с нужным ид
-    let todoList = todoLists.find((tl) => tl.id === todoListId);
-    // если todoList есть то меням значение его фильтра на ту строку, что передали
-    if (todoList) {
-      todoList.filter = value;
-      setTodoList([...todoLists]);
-    }
+    const action = changeTodoListFilterAC(value, todoListId);
+    dispatchTodoReducer(action);
   }
+
   function changeTaskTitle(title: string, taskId: string, todoListId: string) {
-    let tasks = tasksObj[todoListId];
-    let task = tasks.find((t) => t.id === taskId);
-    if (task) {
-      task.title = title;
-      setTasksObj({ ...tasksObj });
-    }
+    const action = changeTaskTitleAC(title, taskId, todoListId);
+    dispatchTasksReducer(action);
   }
   function changeTodoTitle(title: string, todoListId: string) {
-    debugger;
-    let todoList = todoLists.find((tl) => tl.id === todoListId);
-    if (todoList) {
-      todoList.title = title;
-      setTodoList([...todoLists]);
-    }
+    const action = changeTodoListTitleAC(title, todoListId);
+    dispatchTodoReducer(action);
   }
 
   return (
@@ -112,7 +106,7 @@ function AppWithReducer() {
       <AppBar>
         <Toolbar>
           <IconButton edge="start" aria-label="menu">
-            <MenuIcon />
+            {/* <MenuIcon /> */}
           </IconButton>
           <Typography>News</Typography>
           <Button color="inherit">login</Button>

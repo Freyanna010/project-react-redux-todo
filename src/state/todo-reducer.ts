@@ -26,8 +26,16 @@ type Actions =
   | ChangeTodoListTitleAction
   | ChangeTodoListFilterAction;
 
+export let todoListId1 = v1();
+export let todoListId2 = v1();
+
+const initialState:  Array<TodoListType> = [
+    { id: todoListId1, title: "What to learn", filter: "all" },
+    { id: todoListId2, title: "What to but", filter: "all" },
+  ]
+
 export const todoReducer = (
-  state: Array<TodoListType>,
+  state: Array<TodoListType> = initialState,
   action: Actions
 ): Array<TodoListType> => {
   switch (action.type) {
@@ -36,12 +44,12 @@ export const todoReducer = (
     }
     case "ADD-TODOLIST": {
       return [
-        ...state,
         {
           id: action.tolistId,
           title: action.title,
           filter: "all",
         },
+        ...state
       ];
     }
     case "CHANGE-TODO-LIST-TITLE": {
@@ -59,7 +67,7 @@ export const todoReducer = (
       return [...state];
     }
     default:
-      throw new Error("???");
+      return state
   }
 };
 
@@ -79,8 +87,8 @@ export const changeTodoListTitleAC = (
   return { type: "CHANGE-TODO-LIST-TITLE", id, title };
 };
 export const changeTodoListFilterAC = (
-  id: string,
-  filter: FilterValuesType
+  filter: FilterValuesType,
+  id: string
 ): ChangeTodoListFilterAction => {
   return { type: "CHANGE-TODO-LIST-FILTER", id, filter };
 };

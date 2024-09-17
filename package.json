@@ -16,9 +16,13 @@
     "@mui/icons-material": "^5.16.1",
     "@mui/material": "^5.16.1",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@reduxjs/toolkit": "^2.2.7",
+    "@types/react-redux": "^7.1.33",
     "@types/uuid": "^9.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^9.1.2",
+    "redux": "^5.0.1",
     "styled-components": "^6.1.11",
     "uuid": "^10.0.0"
   },
