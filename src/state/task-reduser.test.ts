@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { v1 } from "uuid";
-import { tasksObjType } from "../App";
+import { tasksObjType } from "../AppWithRedux";
 import {
   addTaskAC,
   removeTaskAC,

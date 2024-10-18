@@ -1,35 +1,39 @@
 import { Button, IconButton, TextField } from "@mui/material";
-import { useState, ChangeEvent, KeyboardEvent} from "react";
+import { useState, ChangeEvent, KeyboardEvent } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import react from "@vitejs/plugin-react-swc";
+import React from "react";
 
 type AddItemFormPropsType = {
   addItem: (title: string) => void;
 };
 
-function AddItemForm(props: AddItemFormPropsType) {
+export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
   const [title, setTitle] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const onTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) =>
     setTitle(e.target.value);
 
-  const onKeyDawnHandler = (e: 
-     KeyboardEvent<HTMLInputElement>) => {
+  const onKeyDawnHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     // при нажатии любой  клавиши  в инпуте ошибка очищается и исчезает
-    setError(null);
+    if(setError !== null) {
+      setError(null);
+    }
+
     //проверяем нажат ли энтер
     if (e.key === "Enter") {
       onAddClickHandler();
     }
-  };   
+  };
 
   const onAddClickHandler = () => {
-  if(title.trim() !== "") {
-    props.addItem(title)
-    setTitle("")
-  } else{
-    setError("Title is required");
-  }    
+    if (title.trim() !== "") {
+      props.addItem(title);
+      setTitle("");
+    } else {
+      setError("Title is required");
+    }
   };
 
   return (
@@ -44,15 +48,11 @@ function AddItemForm(props: AddItemFormPropsType) {
         variant={"outlined"}
         label="enter a value"
       />
-      <IconButton
-        onClick={onAddClickHandler}
-               color={"primary"}
-      >
-        <AddCircleIcon/>
+      <IconButton onClick={onAddClickHandler} color={"primary"}>
+        <AddCircleIcon />
       </IconButton>
     </div>
   );
-}
-
+})
 
 export default AddItemForm;

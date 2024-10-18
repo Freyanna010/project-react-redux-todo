@@ -1,6 +1,7 @@
 import { v1 } from "uuid";
-import { FilterValuesType, TodoListType } from "../App";
+import { FilterValuesType, TodoListType } from "../AppWithRedux";
 
+// TODO:вынести типищацию
 export type RemoveTodoListAction = {
   type: "REMOVE-TODOLIST";
   id: string;
@@ -30,13 +31,14 @@ export let todoListId1 = v1();
 export let todoListId2 = v1();
 
 const initialState:  Array<TodoListType> = [
-    { id: todoListId1, title: "What to learn", filter: "all" },
-    { id: todoListId2, title: "What to but", filter: "all" },
+    // { id: todoListId1, title: "What to learn", filter: "all" },
+    // { id: todoListId2, title: "What to but", filter: "all" },
   ]
 
+  //TODO:добавить ккопию стейта 
 export const todoReducer = (
   state: Array<TodoListType> = initialState,
-  action: Actions
+  action: Actions //обьект в котором есть тип и дополнительные параметры
 ): Array<TodoListType> => {
   switch (action.type) {
     case "REMOVE-TODOLIST": {

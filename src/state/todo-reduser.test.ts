@@ -7,7 +7,7 @@ import {
 } from "./todo-reducer";
 import { expect, test } from "vitest";
 import { v1 } from "uuid";
-import { FilterValuesType, tasksObjType, TodoListType } from "../App";
+import { FilterValuesType, tasksObjType, TodoListType } from "../AppWithRedux";
 import { tasksReducer } from "./task-reducer";
 
 test("correct todolist should be removed", () => {

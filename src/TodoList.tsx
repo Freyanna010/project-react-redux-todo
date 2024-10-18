@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { FilterValuesType } from "./App";
+import { FilterValuesType } from "./AppWithRedux";
 import AddItemForm from "./AddInputForm";
 import EditableSpan from "./EditableSpan";
 import Button from "@mui/material/Button";
@@ -32,30 +32,35 @@ type PropsType = {
 };
 
 function TodoList(props: PropsType) {
-  const dispatch = useDispatch();
-  const tasks = useSelector((state: RootState) => state.tasks[props.id]);
-  const onAllClickHandler = () => props.changeFilter("all", props.id);
+  const dispatch = useDispatch(); //получить диспач для отправки экшенов
+  const tasks = useSelector((state: RootState) => state.tasks[props.id]);// получить таски из редакса
+
+  const onAllClickHandler = () => props.changeFilter("all", props.id); //при нажатии на all вызвать changeFilter к-ая в app вызовет нужный экшен там менятся значение фильтра
   const onActiveClickHandler = () => props.changeFilter("active", props.id);
   const onCompletedClickHandler = () =>
     props.changeFilter("completed", props.id);
+
   const removeTodoList = () => {
     props.removeTodoList(props.id);
-  };
+  };//удалить весь туду лист
   const onChangeTodoTitleHandler = (title: string) => {
     props.changeTodoTitle(title, props.id);
-  };
+  };//менять значение
+  
+  // в зависмости от значения фильтра меняем или нет содержание тасок
   let tasksForTodo = tasks;
-
   if (props.filter === "active") {
     tasksForTodo = tasksForTodo.filter((task) => !task.isDone);
   }
   if (props.filter === "completed") {
     tasksForTodo = tasksForTodo.filter((task) => task.isDone);
   }
+
   return (
     <div>
-      <h2>
-        <EditableSpan title={props.title} onChange={onChangeTodoTitleHandler} />
+      <div>
+       
+        <EditableSpan title={props.title} onChange={onChangeTodoTitleHandler} /> 
 
         <IconButton
           aria-label="delete"
@@ -64,8 +69,8 @@ function TodoList(props: PropsType) {
         >
           <DeleteIcon />
         </IconButton>
-      </h2>
-
+      </div>
+       {/* добавление задачи */}
       <AddItemForm addItem={(title) => dispatch(addTaskAC(title, props.id))} />
       <ul>
         {tasksForTodo.map((task) => {

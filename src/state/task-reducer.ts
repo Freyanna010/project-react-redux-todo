@@ -1,4 +1,4 @@
-import { tasksObjType } from "../App";
+import { tasksObjType } from "../AppWithRedux";
 import {
   AddTodoListAction,
   RemoveTodoListAction,
