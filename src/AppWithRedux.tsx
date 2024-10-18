@@ -40,41 +40,24 @@ export type tasksObjType = {
 };
 
 function AppWithRedux() {
-  const dispatch = useDispatch();
-  const todoLists = useSelector((state: RootState) => state.todoList);
-  const tasks = useSelector((state: RootState) => state.tasks);
+  const dispatch = useDispatch(); //для того чтобы передавать action
+  const todoLists = useSelector((state: RootState) => state.todoList); //достаем нужный массив
 
   function removeTodoList(todoListId: string) {
     const action = removeTodoListAC(todoListId);
     dispatch(action); //сразу в два редьюсера
   }
-  function removeTask(id: string, todoListId: string) {
-    // получим экшен из функции криертора
-    const action = removeTaskAC(id, todoListId);
-    // задиспачим полученный экшен
-    dispatch(action);
-  }
-  function addTask(title: string, todoListId: string) {
-    const action = addTaskAC(title, todoListId);
-    dispatch(action);
-  }
+
   function addTodoList(title: string) {
     const action = addTodoListAC(title);
     dispatch(action);
   }
-  function changeStatus(taskId: string, isDone: boolean, todoListId: string) {
-    const action = changeTaskStatusAC(taskId, todoListId, isDone);
-    dispatch(action);
-  }
+
   function changeFilter(value: FilterValuesType, todoListId: string) {
     const action = changeTodoListFilterAC(value, todoListId);
     dispatch(action);
   }
 
-  function changeTaskTitle(title: string, taskId: string, todoListId: string) {
-    const action = changeTaskTitleAC(title, taskId, todoListId);
-    dispatch(action);
-  }
   function changeTodoTitle(title: string, todoListId: string) {
     const action = changeTodoListTitleAC(title, todoListId);
     dispatch(action);
@@ -99,15 +82,6 @@ function AppWithRedux() {
 
         <Grid container spacing="10">
           {todoLists.map((tl) => {
-            let tasksForTodo = tasks[tl.id];
-
-            if (tl.filter === "active") {
-              tasksForTodo = tasksForTodo.filter((task) => !task.isDone);
-            }
-            if (tl.filter === "completed") {
-              tasksForTodo = tasksForTodo.filter((task) => task.isDone);
-            }
-
             return (
               <Grid item>
                 <Paper sx={{ p: "7px" }}>
@@ -115,14 +89,9 @@ function AppWithRedux() {
                     key={tl.id}
                     id={tl.id}
                     title={tl.title}
-                    tasks={tasksForTodo}
                     removeTodoList={removeTodoList}
-                    removeTask={removeTask}
                     changeFilter={changeFilter}
-                    addTask={addTask}
-                    changeTaskStatus={changeStatus}
                     filter={tl.filter}
-                    changeTaskTitle={changeTaskTitle}
                     changeTodoTitle={changeTodoTitle}
                   />
                 </Paper>

@@ -15,7 +15,6 @@ function EditableSpan(props: EditableSpanType) {
     setTitle(props.title);
   };
   let activeViewMode = () => {
-    debugger;
     setEditMode(false);
     props.onChange(title);
   };

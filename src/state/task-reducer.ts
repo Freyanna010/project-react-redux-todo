@@ -1,5 +1,10 @@
 import { tasksObjType } from "../App";
-import { AddTodoListAction, RemoveTodoListAction, todoListId1, todoListId2 } from "./todo-reducer";
+import {
+  AddTodoListAction,
+  RemoveTodoListAction,
+  todoListId1,
+  todoListId2,
+} from "./todo-reducer";
 
 import { v1 } from "uuid";
 
@@ -35,7 +40,6 @@ type Actions =
   | ChangeTitleStatus
   | AddTodoListAction
   | RemoveTodoListAction;
-
 
 const initialState: tasksObjType = {
   [todoListId1]: [
@@ -85,17 +89,12 @@ export const tasksReducer = (
       return stateCopy;
     }
     case "CHANGE-TASK-STATUS": {
-      const stateCopy = {
-        ...state,
-      };
-      const tasks = stateCopy[action.todolistId];
+      const stateCopy = { ...state };
+      let tasks = stateCopy[action.todolistId];
 
-      // получаем таску по айди
-      let task = tasks.find((t) => t.id === action.taskId);
-      // если такая есть - меняем ее статус
-      if (task) {
-        task.isDone = action.isDone;
-      }
+      stateCopy[action.todolistId] = tasks.map((task) =>
+        task.id === action.taskId ? { ...task, isDone: action.isDone } : task
+      );      
       return stateCopy;
     }
     case "CHANGE-TITLE-STATUS": {
