@@ -1,54 +1,53 @@
-import { Button, IconButton, TextField } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import { useState, ChangeEvent, KeyboardEvent } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import react from "@vitejs/plugin-react-swc";
 import React from "react";
 
 type AddItemFormPropsType = {
-  addItem: (title: string) => void;
+  addNewItemToTodoList: (title: string) => void;
 };
 
 export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
-  const [title, setTitle] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [newItemValue, setNewItemValue] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const onTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) =>
-    setTitle(e.target.value);
+  const onItemValueChangeHandel = (e: ChangeEvent<HTMLInputElement>) =>
+    setNewItemValue(e.target.value);
 
   const onKeyDawnHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     // при нажатии любой  клавиши  в инпуте ошибка очищается и исчезает
-    if(setError !== null) {
-      setError(null);
+    if(setErrorMessage !== null) {
+      setErrorMessage(null);
     }
 
     //проверяем нажат ли энтер
     if (e.key === "Enter") {
-      onAddClickHandler();
+      onAddClickHandel();
     }
   };
 
-  const onAddClickHandler = () => {
-    if (title.trim() !== "") {
-      props.addItem(title);
-      setTitle("");
+  const onAddClickHandel = () => {
+    if (newItemValue.trim() !== "") {
+      props.addNewItemToTodoList(newItemValue);
+      setNewItemValue("");
     } else {
-      setError("Title is required");
+      setErrorMessage("Title is required");
     }
   };
 
   return (
     <div>
       <TextField
-        value={title}
-        error={!!error}
-        helperText={error}
-        onChange={onTitleChangeHandler}
+        value={newItemValue}
+        error={!!errorMessage}
+        helperText={errorMessage}
+        onChange={onItemValueChangeHandel}
         onKeyDown={onKeyDawnHandler}
         color={"secondary"}
         variant={"outlined"}
-        label="enter a value"
+        label="enter a new value"  //TODO:сделать динамичным!
       />
-      <IconButton onClick={onAddClickHandler} color={"primary"}>
+      <IconButton onClick={onAddClickHandel} color={"primary"}>
         <AddCircleIcon />
       </IconButton>
     </div>

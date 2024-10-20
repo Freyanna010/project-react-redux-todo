@@ -7,28 +7,39 @@ type EditableSpanType = {
 };
 
 function EditableSpan(props: EditableSpanType) {
-  let [editMode, setEditMode] = useState(false);
-  let [title, setTitle] = useState("");
+  let [editMode, setEditMode] = useState(false); // определяет, находится ли компонент в режиме редактирования.
+  let [titleValue, setTitleValue] = useState(props.title); // инициализируем с prop title
 
-  let activeEditMode = () => {
+  // переключает компонент в режим редактирования
+  const activateEditMode = () => {
     setEditMode(true);
-    setTitle(props.title);
   };
-  let activeViewMode = () => {
+
+  // завершает редактирование и передает новое значение
+  const activateViewMode = () => {
     setEditMode(false);
-    props.onChange(title);
+    if (titleValue.trim() !== "") {
+      props.onChange(titleValue); // передаем новое значение, если оно не пустое
+      console.log(props.title);
+     
+    } else {
+      setTitleValue(props.title); // если значение пустое, сбрасываем на исходное
+    }
   };
-  let onChangeHandler = (e: ChangeEvent<HTMLInputElement>) =>
-    setTitle(e.target.value);
+
+  // обновляем локальное состояние при изменении значения
+  const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) =>
+    setTitleValue(e.target.value);
 
   return editMode ? (
     <TextField
-      value={title}
-      onBlur={activeViewMode}
-      onChange={onChangeHandler}
+      value={titleValue}
+      onBlur={activateViewMode} // при потере фокуса сохраняем изменения
+      onChange={onChangeHandler} // обновляем значение при вводе
+      autoFocus // фокусируем на поле ввода
     />
   ) : (
-    <span onDoubleClick={activeEditMode}>{props.title}</span>
+    <span onDoubleClick={activateEditMode}>{props.title}</span> // активируем редактирование по двойному клику
   );
 }
 

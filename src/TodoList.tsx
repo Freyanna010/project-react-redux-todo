@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect } from "react";
 import { FilterValuesType } from "./AppWithRedux";
 import AddItemForm from "./AddInputForm";
 import EditableSpan from "./EditableSpan";
@@ -32,8 +32,12 @@ type PropsType = {
 };
 
 function TodoList(props: PropsType) {
+  useEffect(() => {
+    console.log("Updated title in props:", props.title);
+  }, [props.title]);
+
   const dispatch = useDispatch(); //получить диспач для отправки экшенов
-  const tasks = useSelector((state: RootState) => state.tasks[props.id]);// получить таски из редакса
+  const tasks = useSelector((state: RootState) => state.tasks[props.id]); // получить таски из редакса только из нужного туду
 
   const onAllClickHandler = () => props.changeFilter("all", props.id); //при нажатии на all вызвать changeFilter к-ая в app вызовет нужный экшен там менятся значение фильтра
   const onActiveClickHandler = () => props.changeFilter("active", props.id);
@@ -42,11 +46,11 @@ function TodoList(props: PropsType) {
 
   const removeTodoList = () => {
     props.removeTodoList(props.id);
-  };//удалить весь туду лист
+  }; //удалить весь туду лист
   const onChangeTodoTitleHandler = (title: string) => {
     props.changeTodoTitle(title, props.id);
-  };//менять значение
-  
+  }; //менять значение
+
   // в зависмости от значения фильтра меняем или нет содержание тасок
   let tasksForTodo = tasks;
   if (props.filter === "active") {
@@ -59,9 +63,7 @@ function TodoList(props: PropsType) {
   return (
     <div>
       <div>
-       
-        <EditableSpan title={props.title} onChange={onChangeTodoTitleHandler} /> 
-
+        <EditableSpan title={props.title} onChange={onChangeTodoTitleHandler} />
         <IconButton
           aria-label="delete"
           onClick={removeTodoList}
@@ -70,17 +72,21 @@ function TodoList(props: PropsType) {
           <DeleteIcon />
         </IconButton>
       </div>
-       {/* добавление задачи */}
-      <AddItemForm addItem={(title) => dispatch(addTaskAC(title, props.id))} />
+      {/* добавление задачи */}
+      <AddItemForm
+        addNewItemToTodoList={(title) => dispatch(addTaskAC(title, props.id))}
+      />
       <ul>
         {tasksForTodo.map((task) => {
-          const removeTask = () => dispatch(removeTaskAC(task.id, props.id));
-          const onChangeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
+          const onRemoveTaskHandel = () =>
+            dispatch(removeTaskAC(task.id, props.id));
+          const onChangeStatusHandel = (e: ChangeEvent<HTMLInputElement>) => {
             let newDoneValue = e.currentTarget.checked;
             dispatch(changeTaskStatusAC(task.id, props.id, newDoneValue));
           };
-          const onChangeTitleHandler = (title: string) => {
-            dispatch(changeTaskTitleAC(title, task.id, props.id));;
+          const onChangeTitleValueHandel = (title: string) => {
+            console.log("Dispatching change title action with title:", title);
+            dispatch(changeTaskTitleAC(task.id, props.id, title));
           };
 
           return (
@@ -89,7 +95,7 @@ function TodoList(props: PropsType) {
                 <Checkbox
                   id="checkbox"
                   checked={task.isDone}
-                  onChange={onChangeStatusHandler}
+                  onChange={onChangeStatusHandel}
                   // sx={{
                   //   color: pink[800],
                   //   "&.Mui-checked": {
@@ -99,11 +105,11 @@ function TodoList(props: PropsType) {
                 />
                 <EditableSpan
                   title={task.title}
-                  onChange={onChangeTitleHandler}
+                  onChange={onChangeTitleValueHandel}
                 />
                 <IconButton
                   aria-label="delete"
-                  onClick={removeTask}
+                  onClick={onRemoveTaskHandel}
                   color={"primary"}
                 >
                   <DeleteIcon />

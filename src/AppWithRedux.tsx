@@ -7,12 +7,6 @@ import {
   removeTodoListAC,
 } from "./state/todo-reducer";
 import {
-  addTaskAC,
-  changeTaskStatusAC,
-  changeTaskTitleAC,
-  removeTaskAC,
-} from "./state/task-reducer";
-import {
   AppBar,
   Button,
   Container,
@@ -77,7 +71,7 @@ function AppWithRedux() {
 
       <Container fixed>
         <Grid container sx={{ mt: 10, mb: 5 }}>
-          <AddItemForm addItem={addTodoList} />
+          <AddItemForm addNewItemToTodoList={addTodoList} />
         </Grid>
 
         <Grid container spacing="10">

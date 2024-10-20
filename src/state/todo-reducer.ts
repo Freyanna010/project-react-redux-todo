@@ -31,8 +31,8 @@ export let todoListId1 = v1();
 export let todoListId2 = v1();
 
 const initialState:  Array<TodoListType> = [
-    // { id: todoListId1, title: "What to learn", filter: "all" },
-    // { id: todoListId2, title: "What to but", filter: "all" },
+    { id: todoListId1, title: "What to learn", filter: "all" },
+    { id: todoListId2, title: "What to but", filter: "all" },
   ]
 
   //TODO:добавить ккопию стейта 

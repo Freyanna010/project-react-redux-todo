@@ -12,23 +12,23 @@ import { v1 } from "uuid";
 export type RemoveTask = {
   type: "REMOVE-TASK";
   taskId: string;
-  todolistId: string;
+  todoListId: string;
 };
 export type AddTask = {
   type: "ADD-TASK";
   title: string;
-  todolistId: string;
+  todoListId: string;
 };
 export type ChangeTaskStatus = {
   type: "CHANGE-TASK-STATUS";
   taskId: string;
-  todolistId: string;
+  todoListId: string;
   isDone: boolean;
 };
 export type ChangeTitleStatus = {
-  type: "CHANGE-TITLE-STATUS";
+  type: "CHANGE-TITLE-VALUE";
   taskId: string;
-  todolistId: string;
+  todoListId: string;
   title: string;
 };
 
@@ -41,6 +41,7 @@ type Actions =
   | AddTodoListAction
   | RemoveTodoListAction;
 
+// TODO:изначальный стейт, убрать
 const initialState: tasksObjType = {
   [todoListId1]: [
     { id: v1(), title: "Learn JS", isDone: false },
@@ -66,12 +67,12 @@ export const tasksReducer = (
     case "REMOVE-TASK": {
       const stateCopy = { ...state };
       // достать нужный массив тасок по айди-туду из экшена
-      const tasks = state[action.todolistId];
+      const tasks = stateCopy[action.todoListId];
       // фильтруем массив тасок, исключая ту таску,которую нужно удалить
       const filteredTasks = tasks.filter((t) => t.id !== action.taskId);
       //  в копии стейта ищем нужный массив тасок
       //  перезаписываем его - добавив новый массив без удаленного обьекта-таски
-      stateCopy[action.todolistId] = filteredTasks;
+      stateCopy[action.todoListId] = filteredTasks;
       return stateCopy;
     }
     case "ADD-TASK": {
@@ -79,34 +80,41 @@ export const tasksReducer = (
         ...state,
       };
       // получить массив тасок,в который нужно добавить новую таску
-      const tasks = stateCopy[action.todolistId];
+      const tasks = stateCopy[action.todoListId];
       //формируем эту новую таску
-      let newTask = { id: v1(), title: action.title, isDone: false };
+      const newTask = { id: v1(), title: action.title, isDone: false };
       // новый массив, в к-ом есть новая таска
       const newTasks = [newTask, ...tasks];
       //перазаписывем копию стайта
-      stateCopy[action.todolistId] = newTasks;
+      stateCopy[action.todoListId] = newTasks;
       return stateCopy;
     }
     case "CHANGE-TASK-STATUS": {
       const stateCopy = { ...state };
-      let tasks = stateCopy[action.todolistId];
+      let tasks = stateCopy[action.todoListId];
 
-      stateCopy[action.todolistId] = tasks.map((task) =>
+      stateCopy[action.todoListId] = tasks.map((task) =>
         task.id === action.taskId ? { ...task, isDone: action.isDone } : task
-      );      
+      );
       return stateCopy;
     }
-    case "CHANGE-TITLE-STATUS": {
+    case "CHANGE-TITLE-VALUE": {
       const copyState = {
         ...state,
       };
-      const tasks = copyState[action.todolistId];
+      const tasks = copyState[action.todoListId];
 
-      let task = tasks.find((t) => t.id === action.taskId);
-      if (task) {
-        task.title = action.title;
+      // Проверяем, существует ли массив задач для данного todoListId
+      if (!tasks) {
+        return state; // Возвращаем текущее состояние, если задач нет
       }
+
+      // Обновляем заголовок задачи
+      copyState[action.todoListId] = tasks.map((task) =>
+        task.id === action.taskId ? { ...task, title: action.title } : task
+      );
+
+      console.log("Updated state:", copyState);
       return copyState;
     }
     // нам нужно добавить тудулист  стейт тасок тоже!
@@ -129,29 +137,26 @@ export const tasksReducer = (
   }
 };
 
-// формируем объекты - экшены
-// принимаем нужные данные - тип и доп.штуки
-// возвращаем объект нужного типа
 export const removeTaskAC = (
   taskId: string,
-  todolistId: string
+  todoListId: string
 ): RemoveTask => {
-  return { type: "REMOVE-TASK", taskId, todolistId };
+  return { type: "REMOVE-TASK", taskId, todoListId };
 };
-export const addTaskAC = (title: string, todolistId: string): AddTask => {
-  return { type: "ADD-TASK", title, todolistId };
+export const addTaskAC = (title: string, todoListId: string): AddTask => {
+  return { type: "ADD-TASK", title, todoListId: todoListId };
 };
 export const changeTaskStatusAC = (
   taskId: string,
-  todolistId: string,
+  todoListId: string,
   isDone: boolean
 ): ChangeTaskStatus => {
-  return { type: "CHANGE-TASK-STATUS", taskId, todolistId, isDone };
+  return { type: "CHANGE-TASK-STATUS", taskId, todoListId, isDone };
 };
 export const changeTaskTitleAC = (
   taskId: string,
-  todolistId: string,
+  todoListId: string,
   title: string
 ): ChangeTitleStatus => {
-  return { type: "CHANGE-TITLE-STATUS", taskId, todolistId, title };
+  return { type: "CHANGE-TITLE-VALUE", taskId, todoListId, title };
 };
