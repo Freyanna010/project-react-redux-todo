@@ -12,7 +12,7 @@ import { RootState } from "./state/store";
 import {
   addTaskAC,
   changeTaskStatusAC,
-  changeTaskTitleAC,
+  changeTaskValueAC,
   removeTaskAC,
 } from "./state/task-reducer";
 
@@ -85,8 +85,7 @@ function TodoList(props: PropsType) {
             dispatch(changeTaskStatusAC(task.id, props.id, newDoneValue));
           };
           const onChangeTitleValueHandel = (title: string) => {
-            console.log("Dispatching change title action with title:", title);
-            dispatch(changeTaskTitleAC(task.id, props.id, title));
+            dispatch(changeTaskValueAC(task.id, props.id, title));
           };
 
           return (

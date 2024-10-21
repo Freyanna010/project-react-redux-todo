@@ -35,7 +35,7 @@ const initialState:  Array<TodoListType> = [
     { id: todoListId2, title: "What to but", filter: "all" },
   ]
 
-  //TODO:добавить ккопию стейта 
+  //TODO:добавить копию стейта
 export const todoReducer = (
   state: Array<TodoListType> = initialState,
   action: Actions //обьект в котором есть тип и дополнительные параметры

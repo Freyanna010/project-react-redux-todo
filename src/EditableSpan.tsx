@@ -20,8 +20,6 @@ function EditableSpan(props: EditableSpanType) {
     setEditMode(false);
     if (titleValue.trim() !== "") {
       props.onChange(titleValue); // передаем новое значение, если оно не пустое
-      console.log(props.title);
-     
     } else {
       setTitleValue(props.title); // если значение пустое, сбрасываем на исходное
     }

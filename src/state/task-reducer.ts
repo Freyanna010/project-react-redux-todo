@@ -25,19 +25,17 @@ export type ChangeTaskStatus = {
   todoListId: string;
   isDone: boolean;
 };
-export type ChangeTitleStatus = {
-  type: "CHANGE-TITLE-VALUE";
+export type ChangeTaskValue = {
+  type: "CHANGE-TASK-VALUE";
   taskId: string;
   todoListId: string;
-  title: string;
+  taskValue: string;
 };
-
-// объединяем типы экшенов для редьюсер - он принимает или такой, или такой  и тд
 type Actions =
   | RemoveTask
   | AddTask
   | ChangeTaskStatus
-  | ChangeTitleStatus
+  | ChangeTaskValue
   | AddTodoListAction
   | RemoveTodoListAction;
 
@@ -54,82 +52,87 @@ const initialState: tasksObjType = {
   ],
 };
 
-// reducer принимает стает с типом обьекта тасок
-//         принимает акшен с типом всех видов тасок
 export const tasksReducer = (
-  // если придет  андефайнед(при первом диспаче) то присвоим стайту инишиал стайт
   state: tasksObjType = initialState,
   action: Actions
 ): tasksObjType => {
-  // следим за тем, какой тип получили из объекта экшен
   switch (action.type) {
-    // если тип такой, то удаляем
     case "REMOVE-TASK": {
       const stateCopy = { ...state };
-      // достать нужный массив тасок по айди-туду из экшена
+
       const tasks = stateCopy[action.todoListId];
-      // фильтруем массив тасок, исключая ту таску,которую нужно удалить
-      const filteredTasks = tasks.filter((t) => t.id !== action.taskId);
-      //  в копии стейта ищем нужный массив тасок
-      //  перезаписываем его - добавив новый массив без удаленного обьекта-таски
+
+      if (!tasks) {
+        return state;
+      }
+
+      const filteredTasks = tasks.filter((task) => task.id !== action.taskId);
       stateCopy[action.todoListId] = filteredTasks;
+
       return stateCopy;
     }
     case "ADD-TASK": {
       const stateCopy = {
         ...state,
       };
-      // получить массив тасок,в который нужно добавить новую таску
+
       const tasks = stateCopy[action.todoListId];
-      //формируем эту новую таску
+
+      if (!tasks) {
+        return state;
+      }
+
       const newTask = { id: v1(), title: action.title, isDone: false };
-      // новый массив, в к-ом есть новая таска
       const newTasks = [newTask, ...tasks];
-      //перазаписывем копию стайта
       stateCopy[action.todoListId] = newTasks;
+
       return stateCopy;
     }
     case "CHANGE-TASK-STATUS": {
       const stateCopy = { ...state };
-      let tasks = stateCopy[action.todoListId];
+
+      const tasks = stateCopy[action.todoListId];
+
+      if (!tasks) {
+        return state;
+      }
 
       stateCopy[action.todoListId] = tasks.map((task) =>
         task.id === action.taskId ? { ...task, isDone: action.isDone } : task
       );
+
       return stateCopy;
     }
-    case "CHANGE-TITLE-VALUE": {
+    case "CHANGE-TASK-VALUE": {
       const copyState = {
         ...state,
       };
+
       const tasks = copyState[action.todoListId];
 
-      // Проверяем, существует ли массив задач для данного todoListId
       if (!tasks) {
-        return state; // Возвращаем текущее состояние, если задач нет
+        return state;
       }
-
-      // Обновляем заголовок задачи
       copyState[action.todoListId] = tasks.map((task) =>
-        task.id === action.taskId ? { ...task, title: action.title } : task
+        task.id === action.taskId ? { ...task, title: action.taskValue } : task
       );
 
-      console.log("Updated state:", copyState);
       return copyState;
     }
-    // нам нужно добавить тудулист  стейт тасок тоже!
-    // именно в него потом добавляем новые таски
     case "ADD-TODOLIST": {
       const stateCopy = {
         ...state,
       };
+
       stateCopy[action.tolistId] = [];
+
       return stateCopy;
     }
     case "REMOVE-TODOLIST": {
       const copyState = { ...state };
-      // удаляем туду через айди из экшена
+   
       delete copyState[action.id];
+
       return copyState;
     }
     default:
@@ -153,10 +156,15 @@ export const changeTaskStatusAC = (
 ): ChangeTaskStatus => {
   return { type: "CHANGE-TASK-STATUS", taskId, todoListId, isDone };
 };
-export const changeTaskTitleAC = (
+export const changeTaskValueAC = (
   taskId: string,
   todoListId: string,
-  title: string
-): ChangeTitleStatus => {
-  return { type: "CHANGE-TITLE-VALUE", taskId, todoListId, title };
+  taskValue: string
+): ChangeTaskValue => {
+  return {
+    type: "CHANGE-TASK-VALUE",
+    taskId,
+    todoListId,
+    taskValue: taskValue,
+  };
 };
