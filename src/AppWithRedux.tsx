@@ -29,7 +29,7 @@ export type TodoListType = {
   filter: FilterValuesType;
 };
 
-export type tasksObjType = {
+export type TasksList = {
   [key: string]: Array<TasksType>;
 };
 

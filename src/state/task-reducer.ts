@@ -1,4 +1,5 @@
-import { tasksObjType } from "../AppWithRedux";
+import { TasksList } from "../AppWithRedux";
+import { TasksType } from "../TodoList";
 import {
   AddTodoListAction,
   RemoveTodoListAction,
@@ -40,7 +41,7 @@ type Actions =
   | RemoveTodoListAction;
 
 // TODO:изначальный стейт, убрать
-const initialState: tasksObjType = {
+const initialState: TasksList = {
   [todoListId1]: [
     { id: v1(), title: "Learn JS", isDone: false },
     { id: v1(), title: "Learn React", isDone: true },
@@ -52,89 +53,15 @@ const initialState: tasksObjType = {
   ],
 };
 
-// export const tasksReducer = (
-//   state: tasksObjType = initialState,
-//   action: Actions
-// ): tasksObjType => {
-//   switch (action.type) {
-//     case "REMOVE-TASK": {
-//       const stateCopy = { ...state };
-
-//       const tasks = stateCopy[action.todoListId];
-
-//       const filteredTasks = tasks.filter((task) => task.id !== action.taskId);
-//       stateCopy[action.todoListId] = filteredTasks;
-
-//       return stateCopy;
-//     }
-//     case "ADD-TASK": {
-//       const stateCopy = {
-//         ...state,
-//       };
-
-//       const tasks = stateCopy[action.todoListId];
-
-//       const newTask = { id: v1(), title: action.title, isDone: false };
-//       const newTasks = [newTask, ...tasks];
-//       stateCopy[action.todoListId] = newTasks;
-
-//       return stateCopy;
-//     }
-//     case "CHANGE-TASK-STATUS": {
-//       const stateCopy = { ...state };
-
-//       const tasks = stateCopy[action.todoListId];
-
-//       stateCopy[action.todoListId] = tasks.map((task) =>
-//         task.id === action.taskId ? { ...task, isDone: action.isDone } : task
-//       );
-
-//       return stateCopy;
-//     }
-//     case "CHANGE-TASK-VALUE": {
-//       const copyState = {
-//         ...state,
-//       };
-
-//       const tasks = copyState[action.todoListId];
-
-//       copyState[action.todoListId] = tasks.map((task) =>
-//         task.id === action.taskId ? { ...task, title: action.taskValue } : task
-//       );
-
-//       return copyState;
-//     }
-//     case "ADD-TODOLIST": {
-//       const stateCopy = {
-//         ...state,
-//       };
-
-//       stateCopy[action.tolistId] = [];
-
-//       return stateCopy;
-//     }
-//     case "REMOVE-TODOLIST": {
-//       const copyState = { ...state };
-
-//       delete copyState[action.id];
-
-//       return copyState;
-//     }
-//     default:
-//       return state;
-//   }
-// };
-
 export const tasksReducer = (
-  state: tasksObjType = initialState,
+  state: TasksList = initialState,
   action: Actions
-): tasksObjType => {
-  const copyState = { ...state };
+): TasksList => {
+  const stateCopy = { ...state };
 
-  const getTasks = (state: tasksObjType, todoListId: string) => state[todoListId] || [];
-  
-  const updateTasks = (tasks: any, todoListId: string) => {
-    copyState[todoListId] = tasks;
+  const getTasks = (state: TasksList, todoListId: string) => state[todoListId] || [];
+  const updateTasks = (tasks: TasksType[], todoListId: string) => {
+    stateCopy[todoListId] = tasks;
   };
  
   switch (action.type) {
@@ -142,7 +69,7 @@ export const tasksReducer = (
       const tasks = getTasks(state, action.todoListId);
       const filteredTasks = tasks.filter((task) => task.id !== action.taskId);
       updateTasks(filteredTasks, action.todoListId);
-      return copyState;
+      return stateCopy;
     }
 
     case "ADD-TASK": {
@@ -150,7 +77,7 @@ export const tasksReducer = (
       const newTask = { id: v1(), title: action.title, isDone: false };
       const newTasks = [newTask, ...tasks];
       updateTasks(newTasks, action.todoListId);
-      return copyState;
+      return stateCopy;
     }
 
     case "CHANGE-TASK-STATUS": {
@@ -159,7 +86,7 @@ export const tasksReducer = (
         task.id === action.taskId ? { ...task, isDone: action.isDone } : task
       );
       updateTasks(updatedTasks, action.todoListId);
-      return copyState;
+      return stateCopy;
     }
 
     case "CHANGE-TASK-VALUE": {
@@ -168,17 +95,17 @@ export const tasksReducer = (
         task.id === action.taskId ? { ...task, title: action.taskValue } : task
       );
       updateTasks(updatedTasks, action.todoListId);
-      return copyState;
+      return stateCopy;
     }
 
     case "ADD-TODOLIST": {
-      copyState[action.tolistId] = [];
-      return copyState;
+      stateCopy[action.tolistId] = [];
+      return stateCopy;
     }
 
     case "REMOVE-TODOLIST": {
-      delete copyState[action.id];
-      return copyState;
+      delete stateCopy[action.id];
+      return stateCopy;
     }
 
     default:

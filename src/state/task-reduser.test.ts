@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { v1 } from "uuid";
-import { tasksObjType } from "../AppWithRedux";
+import { TasksList } from "../AppWithRedux";
 import {
   addTaskAC,
   removeTaskAC,
@@ -14,7 +14,7 @@ import { addTodoListAC } from "./todo-reducer";
 
 test("correct task should be deleted from correct array", () => {
   // создаем изначальный стейт
-  const startState: tasksObjType = {
+  const startState: TasksList = {
     "todolistId1": [
       { id: "1", title: "CSS", isDone: false },
       { id: "2", title: "JS", isDone: true },
@@ -44,7 +44,7 @@ test("correct task should be deleted from correct array", () => {
   expect(endState["todolistId2"].every((t) => t.id !== "2")).toBeTruthy();
 });
 test("correct task should be added to correct array", () => {
-  const startState: tasksObjType = {
+  const startState: TasksList = {
     todolistId1: [
       { id: "1", title: "CSS", isDone: false },
       { id: "2", title: "JS", isDone: true },
@@ -69,7 +69,7 @@ test("correct task should be added to correct array", () => {
   expect(endState["todolistId2"][0].isDone).toBe(false);
 });
 test("status of specified task should be changed", () => {
-  const startState: tasksObjType = {
+  const startState: TasksList = {
     todolistId1: [
       { id: "1", title: "CSS", isDone: false },
       { id: "2", title: "JS", isDone: true },
@@ -91,7 +91,7 @@ test("status of specified task should be changed", () => {
   expect(endState["todolistId1"][1].isDone).toBe(true);
 });
 test("title of specified task should be changed", () => {
-  const startState: tasksObjType = {
+  const startState: TasksList = {
     todolistId1: [
       { id: "1", title: "CSS", isDone: false },
       { id: "2", title: "JS", isDone: true },
@@ -111,7 +111,7 @@ test("title of specified task should be changed", () => {
   expect(endState["todolistId1"][1].title).toBe("JS");
 });
 test("new property with new array should be added when new todolist is added", () => {
-  const startState: tasksObjType = {
+  const startState: TasksList = {
     todolistId1: [
       { id: "1", title: "CSS", isDone: false },
       { id: "2", title: "JS", isDone: true },

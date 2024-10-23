@@ -35,51 +35,58 @@ const initialState:  Array<TodoListType> = [
     { id: todoListId2, title: "What to but", filter: "all" },
   ]
 
-  //TODO:добавить копию стейта
-export const todoReducer = (
-  state: Array<TodoListType> = initialState,
-  action: Actions //обьект в котором есть тип и дополнительные параметры
-): Array<TodoListType> => {
-  switch (action.type) {
-    case "REMOVE-TODOLIST": {
-      return state.filter((t) => t.id !== action.id);
+  // TODO:нужна ли
+  const updateTodoList = (
+    stateCopy: Array<TodoListType>,
+    id: string,
+    changes: Partial<TodoListType>
+  ): Array<TodoListType> => {
+    const index = stateCopy.findIndex((todo) => todo.id === id);
+    if (index > -1) {
+      stateCopy[index] = { ...stateCopy[index], ...changes };
     }
-    case "ADD-TODOLIST": {
-      return [
-        {
-          id: action.tolistId,
-          title: action.title,
-          filter: "all",
-        },
-        ...state
-      ];
-    }
-    case "CHANGE-TODO-LIST-TITLE": {
-      let todoList = state.find((tl) => tl.id === action.id);
-      if (todoList) {
-        todoList.title = action.title;
-      }
-      return [...state];
-    }
-    case "CHANGE-TODO-LIST-FILTER": {
-      let todoList = state.find((tl) => tl.id === action.id);
-      if (todoList) {
-        todoList.filter = action.filter;
-      }
-      return [...state];
-    }
-    default:
-      return state
-  }
-};
+    return stateCopy;
+  };
+  
 
-// генерируют  правильные объекты - вызoвем вместо  описания  экшена - функции фабрики- акшен криейтеры
-// принимает параметры для того чтобы сформировать правильный объект
+  export const todoReducer = (
+    state: Array<TodoListType> = initialState,
+    action: Actions
+  ): Array<TodoListType> => {
+    const stateCopy = [...state];
+  
+    switch (action.type) {
+      case "REMOVE-TODOLIST": {
+        return stateCopy.filter((t) => t.id !== action.id);
+      }
+  
+      case "ADD-TODOLIST": {
+        return [
+          {
+            id: action.tolistId,
+            title: action.title,
+            filter: "all",
+          },
+          ...stateCopy,
+        ];
+      }
+  
+      case "CHANGE-TODO-LIST-TITLE": {
+        return updateTodoList(stateCopy, action.id, { title: action.title });
+      }
+  
+      case "CHANGE-TODO-LIST-FILTER": {
+        return updateTodoList(stateCopy, action.id, { filter: action.filter });
+      }
+  
+      default:
+        return stateCopy;
+    }
+  };
+
 export const removeTodoListAC = (todolistId: string): RemoveTodoListAction => {
-  return { type: "REMOVE-TODOLIST", id: todolistId };
-};
+  return { type: "REMOVE-TODOLIST", id: todolistId };};
 export const addTodoListAC = (title: string): AddTodoListAction => {
-  // генирируем  новый айди здесь
   return { type: "ADD-TODOLIST", title, tolistId: v1() };
 };
 export const changeTodoListTitleAC = (
